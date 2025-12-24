@@ -49,16 +49,14 @@ export default definePlugin({
             find: ".guildNameContainer,onClick:",
             replacement: [
                 {
+                    // make the button clickable
                     match: /children:(\i)\.name\}\).{0,100}\.guildNameContainer/,
                     replace: "onClick:$self.Lurkable($1),$&"
                 },
                 {
-                    match: /disableGuildNameClick:\i.{0,50}\}\),\i/,
-                    replace: "$&,$self.RenderTip(arguments[0].invite?.expires_at)"
-                },
-                {
-                    match: /\.nameContainer.{0,200}\]\}\)/,
-                    replace: "$&,$self.Header(arguments[0].invite?.inviter,arguments[0].profile.name)"
+                    // tip gets inserted in the name container, header gets inserted beside it
+                    match: /(:(\i),disableGuildNameClick:.{0,20}\}\),\i)(\]\}\))/,
+                    replace: "$1,$self.RenderTip(arguments[0].invite?.expires_at)$3,$self.Header(arguments[0].invite?.inviter,$2.name)"
                 }
             ]
         },
